@@ -8,15 +8,14 @@ def frac(n):
         return n * frac(n - 1)
 
 
-def sum(n):
-    if n == 1:
-        return 1
-    else:
-        return n + sum(n - 1)
-
-
 def fraczero(n):
-    print(floor(sum(n) / 10), frac(n))
+    x = frac(n)
+    print(x)
+    counter = 0
+    while x % 10 == 0:
+        counter += 1
+        x = x // 10
+    return counter
 
 
 fraczero(24)

@@ -4,16 +4,14 @@ from Task03 import removeDuplicates
 
 def prime_factors(n):
     dividers = []
-    numbers = primes(n)
     while n != 1:
-        for i in numbers:
+        for i in primes(n):
             if n % i == 0:
                 n /= i
                 dividers.append(i)
     dividers.sort()
-    withoutRep = removeDuplicates(dividers)
     result = []
-    for x in withoutRep:
+    for x in removeDuplicates(dividers):
         ctr = 0
         for y in dividers:
             if x == y:
@@ -22,4 +20,4 @@ def prime_factors(n):
     return result
 
 
-print(prime_factors(472))
+print(prime_factors(123))
