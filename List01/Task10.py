@@ -22,13 +22,17 @@ def getEmptyGraph(g, s):
                     g[i][j] = '-'
                     if j == floor(len(g[i]) - 1):
                         g[i][j] = '>'
-                if i == floor(len(g) / 2) and j == floor(len(g[i]) / 2):
+                if i == floor(len(g) / 2) and j == s:
                     g[i][j] = '+'
     return g
 
 
 def inRange(low, high, x):
     return low <= x <= high
+
+
+def lin(x):
+    return x
 
 
 def draw(func, x1, x2):
@@ -39,11 +43,10 @@ def draw(func, x1, x2):
     yAxis = 0
     # znajdz punkty
     g = [[' ' for j in range(Dx)] for i in range(Dy)]
-    for x in arange(x1, x2, ((abs(x1 - x2)) / 80)):
-        points.append(-floor(11 * func(x)) + int(len(g) / 2))
+    for x in arange(x1, x2, ((abs(x1 - x2)) / Dx)):
+        points.append(-floor(12 * func(x)) + int(len(g) / 2) - 1)
         if round(x) == 0:
             nearZero.append(abs(x))
-    print(points)
 
     # USTAW OS
     if inRange(x1, x2, 0):
@@ -53,15 +56,16 @@ def draw(func, x1, x2):
             if abs(x) == m:
                 yAxis = count
             count += 1
-    print(yAxis)
 
     # umiesc punkty
     for i in range(Dy):
         for j in range(Dx):
-            g[points[j]][j] = '*'
+            if -abs(Dy) < points[j] < abs(Dy):
+                g[points[j]][j] = '*'
+            else:
+                g[Dy - 1][j] = 'E'
 
     print2DArray(getEmptyGraph(g, yAxis))
-    print(points)
 
 
-draw(lin, -2 * pi, 1 * pi)
+draw(sin, -2 * pi, 1 * pi)
