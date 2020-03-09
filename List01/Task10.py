@@ -35,16 +35,17 @@ def lin(x):
     return x
 
 
-def draw(func, x1, x2):
+def draw(func, x1, x2, scale):
     Dx = 80
     Dy = 24
     points = []
     nearZero = []
     yAxis = 0
+    yScale = 12 * scale
     # znajdz punkty
     g = [[' ' for j in range(Dx)] for i in range(Dy)]
     for x in arange(x1, x2, ((abs(x1 - x2)) / Dx)):
-        points.append(-floor(12 * func(x)) + int(len(g) / 2) - 1)
+        points.append(-floor(yScale * func(x)) + int(len(g) / 2) - 1)
         if round(x) == 0:
             nearZero.append(abs(x))
 
@@ -68,4 +69,4 @@ def draw(func, x1, x2):
     print2DArray(getEmptyGraph(g, yAxis))
 
 
-draw(sin, -2 * pi, 1 * pi)
+draw(sin, -2 * pi, 5 * pi, 1)
