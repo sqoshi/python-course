@@ -1,8 +1,6 @@
 import csv
 import numpy as np
-from sklearn import linear_model
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 
@@ -71,7 +69,7 @@ def get_x(people_ids, movie_ids):
 
 
 def a():
-    for m in [10, 100, 100]:
+    for m in [10, 100, 1000]:
         people_ids, y = get_y()
         movies_ids = get_movie_ids(m)
         x = get_x(people_ids, movies_ids)
@@ -90,14 +88,15 @@ def a():
         print('Predicted response:', y_pred, sep='\n')
         print('Real response:', y, sep='\n')
         plt.scatter(z, y, color="red")
-        plt.plot(z, y_pred, color="green")
+        plt.scatter(z, y, color="red")
+        plt.subplot(333)
         plt.xlabel("x")
         plt.ylabel("y")
         plt.show()
 
 
 def b():
-    for m in [10, 100, 500, 100, 1000, 10000]:
+    for m in [10, 100, 500, 1000, 10000]:
         people_ids, y = get_y()
         movies_ids = get_movie_ids(m)
         x = get_x(people_ids, movies_ids)
@@ -110,7 +109,7 @@ def b():
 
 
 def main():
-    b()
+    a()
 
 
 main()
