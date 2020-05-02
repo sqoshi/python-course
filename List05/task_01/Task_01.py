@@ -1,17 +1,23 @@
 import csv
+import sys
+
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
 
 def my_round_all(y_pred):
-    # rounding i am  not really sure if i should do it.
+    """Rounding all grades as secyfied in my_round"""
     for i in range(len(y_pred)):
         y_pred[i] = my_round(y_pred[i])
 
 
 def my_round(flo):
     """Rounds marks to halves (0.5)."""
+    if flo >= 5:
+        return 5
+    if flo <= 1:
+        return 1
     i = int(flo)
     rest = abs(flo - i)
     if rest <= 25:
@@ -68,13 +74,15 @@ def get_x(people_ids, movie_ids):
     return x
 
 
-def a():
-    for m in [10, 100, 1000]:
+def a(round, graphs):
+    name = 'a'
+    graphs_data = []
+    samples = [10, 100, 1000]
+    for m in samples:
         people_ids, y = get_y()
+        size = (len(people_ids))
         movies_ids = get_movie_ids(m)
         x = get_x(people_ids, movies_ids)
-        # just for graph?
-        z = [i for i in range(len(people_ids))]
         model = LinearRegression().fit(x, y)
         r_sq = model.score(x, y)
         print('##########################################################################################')
@@ -84,18 +92,30 @@ def a():
         print('intercept:', model.intercept_)
         print('slope:', model.coef_)
         y_pred = model.intercept_ + np.sum(model.coef_ * x, axis=1)
-
+        # I am not really sure if i should round my results or not.
+        graphs_data.append((y, y_pred))
+        if round:
+            name = "a_rounded"
+            my_round_all(y_pred)
         print('Predicted response:', y_pred, sep='\n')
         print('Real response:', y, sep='\n')
-        plt.scatter(z, y, color="red")
-        plt.scatter(z, y, color="red")
-        plt.subplot(333)
-        plt.xlabel("x")
-        plt.ylabel("y")
+    if graphs:
+        i = 0
+        fig, l = plt.subplots(len(graphs_data))
+
+        for real, pred in graphs_data:
+            z = [i for i in range(size)]
+            l[i].scatter(z, real, color="red", s=3)
+            # as line just for better visualisation i know there is no user 215,5 just R.
+            l[i].plot(z, pred, color="green")
+            i += 1
+        fig.savefig('plots/' + name)
         plt.show()
 
 
-def b():
+def b(round, graphs):
+    name = 'b'
+    graphs_data = []
     for m in [10, 100, 500, 1000, 10000]:
         people_ids, y = get_y()
         movies_ids = get_movie_ids(m)
@@ -103,13 +123,44 @@ def b():
         x_train, x_test, y_train, y_test = x[:200], x[200:], y[:200], y[200:]
         model = LinearRegression().fit(x_train, y_train)
         y_pred = model.intercept_ + np.sum(model.coef_ * x, axis=1)
-        my_round_all(y_pred)
-        print('Predicted response:', y_pred[200:], sep='\n')
-        print('Real response:', y_test, sep='\n')
+        # I am not really sure if i should round my results or not.
+        if round:
+            my_round_all(y_pred)
+            name = 'b_rounded'
+        graphs_data.append((y_test, y_pred[200:]))
+        print('======== Real | Predicted =======')
+        for i in range(len(y_test)):
+            print(y_test[i], " | ", y_pred[200 + i])
+        print('=================================')
+
+    if graphs:
+        i = 0
+        fig, l = plt.subplots(len(graphs_data))
+        for real, pred in graphs_data:
+            z = [i for i in range(15)]
+            l[i].plot(z, real, color="red", )
+            l[i].plot(z, pred, color="green")
+            i += 1
+        fig.savefig('plots/' + name)
+        plt.show()
 
 
-def main():
-    a()
+def main(options):
+    if "a" in options:
+        f = a
+    elif "b" in options:
+        f = b
+    else:
+        raise ValueError('You need to pass arguments. For example a --graphs --round')
+
+    if "--graphs" in options and "--round" in options:
+        f(True, True)
+    elif "--graphs" in options and "--round" not in options:
+        f(False, True)
+    elif "--round" in options and "--graphs" in options:
+        f(True, False)
+    else:
+        f(False, False)
 
 
-main()
+main(sys.argv[1:])

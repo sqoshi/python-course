@@ -123,8 +123,7 @@ def gui(movies_titles, movies_ids):
 
 
 def main():
-    movies = read_movie_all()
-    movies_ids, movies_titles = zip(*movies)
+    movies_ids, movies_titles = zip(*read_movie_all())
     gui(movies_titles, movies_ids)
 
 
