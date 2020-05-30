@@ -33,4 +33,4 @@ def t4(path):
     # t4(sys.argv[1])
 
 
-t4("/home/piotr/Documents/python-course/List02/task_04")
+t4("/home/piotr/Documents/python-course/245162/List_02/tests/dir1")

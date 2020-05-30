@@ -40,10 +40,23 @@ def get_x(users, movie_ids):
     return x
 
 
+global y
+
+
 def gui(movies_titles, movies_ids):
+    movies_titles = list(movies_titles)
+    movies_ids = list(movies_ids)
     rated = []
-    global y
     y = [[0] for _ in range(len(movies_titles))]
+    print(movies_ids.index('1097'))
+    print(movies_titles[movies_ids.index('260')])
+    print(movies_titles[movies_ids.index('2571')])
+    print(movies_titles[movies_ids.index('1196')])
+    print(movies_titles[movies_ids.index('1210')])
+    print(movies_titles[movies_ids.index('1097')])
+    print(movies_titles[movies_ids.index('32')])
+    print(movies_titles[movies_ids.index('1198')])
+    print(movies_titles[movies_ids.index('1240')])
 
     def dbclick(event):
         global movie_title
@@ -60,7 +73,7 @@ def gui(movies_titles, movies_ids):
         position = movies_titles.index(movie_title)
         rated.append(movie_title)
         y[position][0] = val
-        print('You rated', movie_title, '!', val)
+        print('You rated', movie_title, '!', val, 'id:', movies_ids[movies_titles.index(movie_title)])
 
     def recommend():
         q = 10

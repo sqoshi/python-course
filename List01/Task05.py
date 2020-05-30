@@ -18,4 +18,4 @@ def fraczero(n):
     return counter
 
 
-fraczero(24)
+fraczero(99998150012677960509854672544694223)
