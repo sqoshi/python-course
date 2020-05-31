@@ -1,132 +1,110 @@
+import sys
+
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.metrics import mean_squared_error as mse
 from sklearn.preprocessing import MinMaxScaler
+
+tanh = np.tanh
+
+
+def tanh_derivative(x: np.ndarray) -> np.ndarray:
+    return 1.0 - x ** 2
+
+
+def relu(x):
+    return x * (x > 0)
+
+
+def relu_derivative(x):
+    return 1. * (x > 0)
 
 
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
 
-def softmax(s):
-    exps = np.exp(s - np.max(s, axis=1, keepdims=True))
-    return exps / np.sum(exps, axis=1, keepdims=True)
-
-
-def sigmoid_derv(x):
+def sigmoid_derivative(x):
     return x * (1.0 - x)
 
 
-def cross_entropy(pred, real):
-    n_samples = real.shape[0]
-    res = pred - real
-    return res / n_samples
-
-
-def error(pred, real):
-    n_samples = real.shape[0]
-    logp = - np.log(pred[np.arange(n_samples), real.argmax(axis=1)])
-    loss = np.sum(logp) / n_samples
-    return loss
-
-
-def scale_data(data: np.ndarray, target_range=(0, 1)) -> np.ndarray:
-    scaler = MinMaxScaler(target_range)
-    return scaler.fit_transform(data)
-
-
 class NeuralNetwork:
-    def __init__(self, x, y):
-        self.x = x
-        neurons = 10
-        self.lr = 0.5
-        ip_dim = x.shape[1]
-        op_dim = y.shape[1]
-        self.w1 = np.random.randn(ip_dim, neurons)  # weights
-        self.b1 = np.zeros((1, neurons))  # biases
-        self.w2 = np.random.randn(neurons, op_dim)
-        self.b2 = np.zeros((1, op_dim))
+    def __init__(self, x, y, eta=0.05, func1=relu, func2=relu, der1=relu_derivative, der2=relu_derivative, in_neurons=1,
+                 neurons=10, out_neurons=1):
+        np.random.seed(17)
+        self.f1 = func1
+        self.f2 = func2
+        self.der2 = der2  # relu_derivative if func1.__name__ == 'relu' else sigmoid_derivative
+        self.der1 = der1  # relu_derivative if func1.__name__ == 'relu' else sigmoid_derivative
+        self.input = x
+        self.weights1 = np.random.rand(neurons, in_neurons)
+        self.weights2 = np.random.rand(out_neurons, neurons)
         self.y = y
+        self.output = np.zeros(self.y.shape)
+        self.eta = eta
 
     def feedforward(self):
-        z1 = np.dot(self.x, self.w1) + self.b1
-        self.a1 = sigmoid(z1)
-        z2 = np.dot(self.a1, self.w2) + self.b2
-        self.a2 = softmax(z2)
+        self.layer1 = self.f1(np.dot(self.input, self.weights1.T))
+        self.output = self.f2(np.dot(self.layer1, self.weights2.T))
 
     def backprop(self):
-        loss = error(self.a2, self.y)
-        print('Error :', loss)
-        a2_delta = cross_entropy(self.a2, self.y)  # w3
-        z1_delta = np.dot(a2_delta, self.w2.T)
-        a1_delta = z1_delta * sigmoid_derv(self.a1)  # w1
+        delta2 = (self.y - self.output) * self.der2(self.output)
+        d_weights2 = self.eta * np.dot(delta2.T, self.layer1)
 
-        self.w2 -= self.lr * np.dot(self.a1.T, a2_delta)
-        self.b2 -= self.lr * np.sum(a2_delta, axis=0, keepdims=True)
-        self.w1 -= self.lr * np.dot(self.x.T, a1_delta)
-        self.b1 -= self.lr * np.sum(a1_delta, axis=0)
+        delta1 = np.dot(delta2, self.weights2) * self.der1(self.layer1)
+        d_weights1 = self.eta * np.dot(delta1.T, self.input)
 
-    def predict(self, data):
-        self.x = data
+        self.weights1 += d_weights1
+        self.weights2 += d_weights2
+
+    def learn(self):
         self.feedforward()
-        return self.a2
+        self.backprop()
 
 
-def learn_function(training_data_x, training_data_y, test_data_x, test_data_y, nn: NeuralNetwork = None):
-    training_data_x = training_data_x.reshape((-1, 1))
-    training_data_y = training_data_y.reshape((-1, 1))
-    test_data_x = test_data_x.reshape((-1, 1))
-    test_data_y = test_data_y.reshape((-1, 1))
-    # preprocess data for nn
-    scaler_x = MinMaxScaler((0, 1))
-    scaler_y = MinMaxScaler((0, 1))
-    scaled_x_train = scaler_x.fit_transform(training_data_x)
-    scaled_y_train = scaler_y.fit_transform(training_data_y)
-    scaled_x_test = scaler_x.fit_transform(test_data_x)
-    # learning
-    nn = NeuralNetwork(scaled_x_train, scaled_y_train)
-    draw = 10000
-    for i in range(100):
-        nn.feedforward()
-        nn.backprop()
-
-        if i % draw == 0:
-            pr = nn.predict(scaled_x_test)
-            print('p', pr, len(pr))
-
-            plt.scatter(test_data_x, test_data_y, 14)
-            plt.scatter(test_data_x, scaler_y.inverse_transform(pr), 14)
-            plt.show()
-
-        plt.scatter(test_data_x, test_data_y)
-        plt.title(f'Function')
-        plt.show()
-
-        pr = nn.predict(scaled_x_test)
-        plt.scatter(test_data_x, scaler_y.inverse_transform(pr))
-        plt.title(f'End, Error: '
-                  f'{np.square(test_data_y - scaler_y.inverse_transform(pr)).mean()}')
-        plt.show()
+def draw(x_normal, y_normal, speculated):
+    plt.scatter(x_normal, speculated, label='learned')
+    plt.scatter(x_normal, y_normal, label='original')
+    plt.show()
 
 
 def learn_parabolic():
-    training_data = np.linspace(-50, 50, 26)
-    labels = training_data ** 2
-    test_data = np.linspace(-50, 50, 101)
-    expected_from_test = test_data ** 2
-    learn_function(training_data, labels, test_data, expected_from_test)
-
-
-learn_parabolic()
-"""
-if __name__ == '__main__':
-    x = np.array(np.linspace(-50, 50, 26))
+    x = np.linspace(-50, 50, 101)
     y = x ** 2
-    neural_network = NeuralNetwork(x, y)
-    for _ in range(10000):
+    x, y = x.reshape((len(x), 1)), y.reshape((len(y), 1))
+    x_scaled, y_scaled = MinMaxScaler(), MinMaxScaler()
+    x, y = x_scaled.fit_transform(x), y_scaled.fit_transform(y)
+    neural_network = NeuralNetwork(x, y,
+                                   func1=sigmoid, func2=sigmoid,
+                                   der1=sigmoid_derivative, der2=sigmoid_derivative)
+    for i in range(5000):
         neural_network.feedforward()
         neural_network.backprop()
-    np.set_printoptions(precision=3, suppress=True)
-    print(neural_network.a2)
-    print(neural_network.w1)
-    print(neural_network.w2)
-"""
+        if i % 150 == 0:
+            x_p, y_p = x_scaled.inverse_transform(x), y_scaled.inverse_transform(y)
+            speculated = y_scaled.inverse_transform(neural_network.output)
+            draw(x_p, y_p, speculated)
+            print('MSE: %.3f' % (mse(y_p, speculated) / 10 ** 5))  # scaled mse
+
+
+def learn_sinus():
+    x = np.linspace(0, 2, 161)
+    y = np.sin((3 * np.pi / 2) * x)
+    x, y = x.reshape((len(x), 1)), y.reshape((len(y), 1))
+    x_scaled, y_scaled = MinMaxScaler(), MinMaxScaler()
+    x, y = x_scaled.fit_transform(x), y_scaled.fit_transform(y)
+    neural_network = NeuralNetwork(x, y, eta=0.0001,
+                                   func1=tanh, func2=tanh,
+                                   der1=tanh_derivative, der2=tanh_derivative)
+    for i in range(100000):
+        neural_network.feedforward()
+        neural_network.backprop()
+        if i % 5000 == 0:
+            x_p, y_p = x_scaled.inverse_transform(x), y_scaled.inverse_transform(y)
+            speculated = y_scaled.inverse_transform(neural_network.output)
+            draw(x_p, y_p, speculated)
+            print('MSE: %.5f' % mse(y_p, speculated))
+
+
+if __name__ == '__main__':
+    learn_parabolic() if '--parabolic' in sys.argv else learn_sinus()

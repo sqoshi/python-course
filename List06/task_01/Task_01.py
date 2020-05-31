@@ -45,7 +45,7 @@ class NeuralNetwork:
 
         self.weights1 += d_weights1
         self.weights2 += d_weights2
-`
+
 
 if __name__ == '__main__':
     X = np.array([[0, 0, 1],
