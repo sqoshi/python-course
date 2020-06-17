@@ -4,11 +4,13 @@ Na tej liście należy korzystać z bibliotek uczenia maszynowego.
 Jej celem jest poznanie aktualnie wykorzystywanych narzędzi uczenia maszynowego. 
 
 ## Zadanie 1 
-Zaprojektuj sieć neuronową dwuwarstwową do aproksymacji funkcji i naucz ją funkcji (jedna funkcja dla jednej sieci) z wykorzystaniem Kerasa i Tensorflow. Wykonaj testy dla kilku funkcji aktywacji oraz dla wielu warstw sieci. Poeksperymentuj!
+__Zaprojektuj sieć neuronową dwuwarstwową do aproksymacji funkcji i naucz ją funkcji (jedna funkcja dla jednej sieci) z wykorzystaniem Kerasa i Tensorflow. Wykonaj testy dla kilku funkcji aktywacji oraz dla wielu warstw sieci. Poeksperymentuj!__
 
 Funcs: sinus, x**2
 ## Zadanie 2
- Wykorzystując architekturę sieci neuronowych RetinaNet Focal Loss for Dense Object Detection zaprogramuj wykrywanie obiektów. Możesz np. skorzystać z implementacji sieci w Kerasie razem z modelem uczonym na danych COCO object detection dataset. Instalacje biblioteki możesz przeprowadzić np. tak
+ __Wykorzystując architekturę sieci neuronowych RetinaNet Focal Loss for Dense Object Detection zaprogramuj wykrywanie obiektów. Możesz np. skorzystać z implementacji sieci w Kerasie razem z modelem uczonym na danych COCO object detection dataset.__
+
+Instalacje biblioteki możesz przeprowadzić np. tak
 
     %pip install -q git+https://github.com/fizyr/keras-retinanet
 
@@ -18,7 +20,7 @@ Wykrywanie obiektów zrób na zdjęciu oraz z wykorzystaniem kamerki.
 
 
 ## Zadanie 3 (20pt)
-Wybierz architekturę MobileNet lub Squeeze-and-Excitation network. Przeczytaj publikację i samodzielnie zaimplementuj ją w Kerasie.
+__Wybierz architekturę MobileNet lub Squeeze-and-Excitation network. Przeczytaj publikację i samodzielnie zaimplementuj ją w Kerasie.__
 
 Zapoznaj się z różnymi modelami dostępnymi w Kerasie https://keras.io/applications/ .
 Postaraj się uzyskać dobrą wydajność na małych zbiorach danych np. CIFAR-10.
@@ -28,7 +30,7 @@ Na tej liście nie korzystamy z bibliotek uczenia maszynowego np. keras.
 Jej celem jest poznanie algorytmów uczenia sieci neuronowych.
 
 ## Zadanie 1 
-Zaimplementuj algorytm propagacji wstecznej przedstawiony dla sieci neuronowej 3-4-1 (3-wejścia, 4-warstwa ukryta, 1-wyjście). Rozwiąż problem XOR.
+__Zaimplementuj algorytm propagacji wstecznej przedstawiony dla sieci neuronowej 3-4-1 (3-wejścia, 4-warstwa ukryta, 1-wyjście). Rozwiąż problem XOR.__
 
 Następnie zamiast funkcji sigmoidalnej``` σ(x)=11−e−x```
 wykorzystaj funkcje aktywacji ReLU ```ReLU(x)=max(0,x)```
@@ -41,7 +43,7 @@ Które rozwiązanie daje lepszą dokładność? Odpowiedź na to pytanie pisząc
    z przykładu z wykładu mamy ostatnią kolumnę z samymi jedynkami.
 
 ## Zadanie 2 
-Zaprojektuj sieć neuronową dwuwarstwową do aproksymacji funkcji np. sieć 1-5-1 lub 1-10-1 itp. i naucz ją funkcji (jedna funkcja dla jednej sieci)
+__Zaprojektuj sieć neuronową dwuwarstwową do aproksymacji funkcji np. sieć 1-5-1 lub 1-10-1 itp. i naucz ją funkcji (jedna funkcja dla jednej sieci)__
 
 Weźmy dane wejściowe, jako próbkowana funkcja paraboliczna
 
@@ -70,14 +72,16 @@ Dobierz też odpowiednie dla problemu funkcje aktywacji! Dokładnie σ
 , ReLU lub tanh.
 W czasie uczenia pokazuj aproksymacje funkcji co np. 100 krok, czyli co 100 krok np. dla funkcji parabolicznej dla wektora x = np.linspace(-50,50,101) pokaż wynik działania sieci wykorzystując matplotlib. Dostaniemy animacje procesu uczenia sieci. Wyświetlaj jeszcze aktualny krok uczenia oraz błąd średnio-kwadratowy. Animacje procesu uczenia wykonaj dla dwóch powyższych zbiorów danych (parabola i sinus).
 ## Zadadnie 3
-Wykonaj zadanie drugie dla sieci o trzech warstwach np. 1-10-10-1. Sam napisz algorytm propagacji wstecznej dla sieci trójwarstwowej. Jakie wyniki aproksymacji dostaniemy dla tej ,,głębszej'' sieci? 
+__Wykonaj zadanie drugie dla sieci o trzech warstwach np. 1-10-10-1. Sam napisz algorytm propagacji wstecznej dla sieci trójwarstwowej.__
+ 
+ Jakie wyniki aproksymacji dostaniemy dla tej ,,głębszej'' sieci?
 
 # Lista 5
 Przy pisaniu programów (funkcji) NALEŻY stosować się do ogólnie przyjętego stylu programowania w języku Python.
 Proszę dokładnie przeczytać PEP 8 (tutorial, google python style) i PEP 257.
 
 ## Zadanie 1 
-Napisz wykorzystując regresję liniową program, który na podstawie oceny filmów przez użytkowników będzie starał się przewidzieć ocenę innych użytkowników.
+__Napisz wykorzystując regresję liniową program, który na podstawie oceny filmów przez użytkowników będzie starał się przewidzieć ocenę innych użytkowników.__
 
 Jako dane wykorzystamy zbiór MovieLens Latest Datasets. 
   Zadanie polega na wybraniu z pliku ratings.csv tych użytkowników (userId),
@@ -324,7 +328,7 @@ Przy pisaniu programów NALEŻY stosować się do ogólnie przyjętego stylu pro
  Proszę dokładnie przeczytać PEP 8 (tutorial, google python style) i PEP 257.
 
 ## Zadanie 1
-Napisz program, który dla danego pliku tekstowego wróci następujące informacje: liczba bajtów, liczbę słów, liczbę linii oraz maksymalną długość linii.
+__Napisz program, który dla danego pliku tekstowego wróci następujące informacje: liczba bajtów, liczbę słów, liczbę linii oraz maksymalną długość linii.__
 
         $ python wordcount.py tekst.txt
         liczba bajtów: 4956
@@ -333,7 +337,7 @@ Napisz program, który dla danego pliku tekstowego wróci następujące informac
         maksymalna długość linii: 67
 
 ## Zadanie  2
-Napisz program, który koduje oraz dekoduje dowolny plik binarny w kodzie Base64. Kod Base64 koduje w taki sposób, że każde kolejne 6 bitów z pliku kodowane jest znakiem ASCII przedstawionych w poniższej tabeli:
+__Napisz program, który koduje oraz dekoduje dowolny plik binarny w kodzie Base64. Kod Base64 koduje w taki sposób, że każde kolejne 6 bitów z pliku kodowane jest znakiem ASCII przedstawionych w poniższej tabeli:__
 
         tablica = 'ABCD​EFGH​IJKL​MNOP​QRST​UVWX​YZab​cdef​ghij​klmn​opqr​stuv​wxyz​0123​4567​89+/'
 
